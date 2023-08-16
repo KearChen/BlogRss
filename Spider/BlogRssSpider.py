@@ -6,7 +6,7 @@ import argparse
 from dateutil.parser import parse as date_parse
 from tqdm import tqdm
 
-API_URL_GET_BLOGGERS = "信息api"
+API_URL_GET_BLOGGERS = "https://www.blogrss.cn/api/get_bloggers_api.php"
 API_URL_WRITE_BLOG = "写入api"
 
 class BlogRssSpider:
@@ -31,28 +31,10 @@ class BlogRssSpider:
 
     def parse_publish_date(self, date_str):
         try:
-            # 尝试使用dateutil.parser库解析日期
             publish_date = date_parse(date_str)
             return publish_date.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            pass
-
-        try:
-            # 尝试使用datetime库解析日期
-            publish_date = datetime.datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
-            return publish_date.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            pass
-
-        try:
-            # 尝试使用RFC2822规范解析日期
-            publish_date = datetime.datetime.strptime(date_str, '%a, %d %b %Y %H:%M:%S %z')
-            return publish_date.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            pass
-
-        # 无法解析日期，返回空字符串
-        return ''
+        except Exception:
+            return ''
 
     def crawl_rss_data(self, bloggers_data):
         for blogger in bloggers_data:
